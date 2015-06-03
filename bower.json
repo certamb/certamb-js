@@ -1,13 +1,13 @@
 {
-  "name": "keycloak",
+  "name": "sistcoop",
   "version": "1.2.0.Final",
-  "main": "dist/keycloak.js",
+  "main": "dist/sistcoop.js",
   "ignore": [
     "**/.*"
   ],
-  "description": "Keycloak adapter",
+  "description": "Sistcoop adapter",
   "keywords": [
-    "keycloak",
+    "sistcoop",
     "sso",
     "oauth",
     "oauth2",
