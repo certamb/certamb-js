@@ -61,31 +61,6 @@
             return adapter.login(options);
         };
 
-        sc.loadSucursal = function() {
-            var url = getServerUrl() + '/rest/session/account/sucursal';
-            var req = new XMLHttpRequest();
-            req.open('GET', url, true);
-            req.setRequestHeader('Accept', 'application/json');
-            req.setRequestHeader('Authorization', 'bearer ' + sc.authenticatedToken);
-
-            var promise = createPromise();
-
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    if (req.status == 200) {
-                        sc.sucursal = JSON.parse(req.responseText);
-                        promise.setSuccess(sc.sucursal);
-                    } else {
-                        promise.setError();
-                    }
-                }
-            };
-
-            req.send();
-
-            return promise.promise;
-        };
-
         sc.loadAgencia = function() {
             var url = getServerUrl() + '/rest/session/account/agencia';
             var req = new XMLHttpRequest();
@@ -99,7 +74,12 @@
                 if (req.readyState == 4) {
                     if (req.status == 200) {
                         sc.agencia = JSON.parse(req.responseText);
+                        sc.agenciaLoaded = true;
                         promise.setSuccess(sc.agencia);
+                    } else if (req.status == 204) {
+                        sc.agencia = undefined;
+                        promise.setSuccess(sc.agencia);
+                        sc.agenciaLoaded = true;
                     } else {
                         promise.setError();
                     }
@@ -111,8 +91,8 @@
             return promise.promise;
         };
 
-        sc.loadTrabajador = function() {
-            var url = getServerUrl() + '/rest/session/account/trabajador';
+        sc.loadCaja = function() {
+            var url = getServerUrl() + '/rest/session/account/caja';
             var req = new XMLHttpRequest();
             req.open('GET', url, true);
             req.setRequestHeader('Accept', 'application/json');
@@ -123,8 +103,43 @@
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
-                        sc.trabajador = JSON.parse(req.responseText);
-                        promise.setSuccess(sc.trabajador);
+                        sc.caja = JSON.parse(req.responseText);
+                        sc.cajaLoaded = true;
+                        promise.setSuccess(sc.caja);
+                    } else if (req.status == 204) {
+                        sc.caja = undefined;
+                        sc.cajaLoaded = true;
+                        promise.setSuccess(sc.caja);
+                    } else {
+                        promise.setError();
+                    }
+                }
+            };
+
+            req.send();
+
+            return promise.promise;
+        };
+
+        sc.loadPersona = function() {
+            var url = getServerUrl() + '/rest/session/account/persona';
+            var req = new XMLHttpRequest();
+            req.open('GET', url, true);
+            req.setRequestHeader('Accept', 'application/json');
+            req.setRequestHeader('Authorization', 'bearer ' + sc.authenticatedToken);
+
+            var promise = createPromise();
+
+            req.onreadystatechange = function () {
+                if (req.readyState == 4) {
+                    if (req.status == 200) {
+                        sc.persona = JSON.parse(req.responseText);
+                        sc.personaLoaded = true;
+                        promise.setSuccess(sc.persona);
+                    } else if (req.status == 204) {
+                        sc.persona = undefined;
+                        sc.personaLoaded = true;
+                        promise.setSuccess(sc.persona);
                     } else {
                         promise.setError();
                     }
@@ -245,18 +260,18 @@
                     login: function (options) {
                         var promise = createPromise();
 
-                        //load Sucursal
-                        sc.loadSucursal().success(function () {
-                            if(sc.sucursal && sc.agencia && sc.trabajador) {
+                        //load Agencia
+                        sc.loadAgencia().success(function () {
+                            if(sc.agenciaLoaded && sc.cajaLoaded && sc.personaLoaded) {
                                 promise.setSuccess();
                             }
                         }).error(function () {
                             promise.setError();
                         });
 
-                        //load Agencia
-                        sc.loadAgencia().success(function () {
-                            if(sc.sucursal && sc.agencia && sc.trabajador) {
+                        //load caja
+                        sc.loadCaja().success(function () {
+                            if(sc.agenciaLoaded && sc.cajaLoaded && sc.personaLoaded) {
                                 promise.setSuccess();
                             }
                         }).error(function () {
@@ -264,8 +279,8 @@
                         });
 
                         //load Trabajador
-                        sc.loadTrabajador().success(function () {
-                            if(sc.sucursal && sc.agencia && sc.trabajador) {
+                        sc.loadPersona().success(function () {
+                            if(sc.agenciaLoaded && sc.cajaLoaded && sc.personaLoaded) {
                                 promise.setSuccess();
                             }
                         }).error(function () {
