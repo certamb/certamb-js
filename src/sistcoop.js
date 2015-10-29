@@ -62,7 +62,7 @@
         };
 
         sc.loadAgencia = function() {
-            var url = getServerUrl() + '/rest/session/account/agencia';
+            var url = getServerUrl() + '/session/account/agencia';
             var req = new XMLHttpRequest();
             req.open('GET', url, true);
             req.setRequestHeader('Accept', 'application/json');
@@ -92,7 +92,7 @@
         };
 
         sc.loadCaja = function() {
-            var url = getServerUrl() + '/rest/session/account/caja';
+            var url = getServerUrl() + '/session/account/caja';
             var req = new XMLHttpRequest();
             req.open('GET', url, true);
             req.setRequestHeader('Accept', 'application/json');
@@ -122,7 +122,7 @@
         };
 
         sc.loadPersona = function() {
-            var url = getServerUrl() + '/rest/session/account/persona';
+            var url = getServerUrl() + '/session/account/persona';
             var req = new XMLHttpRequest();
             req.open('GET', url, true);
             req.setRequestHeader('Accept', 'application/json');
