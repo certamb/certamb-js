@@ -1,8 +1,8 @@
 (function (window, undefined) {
 
-    var Sistcoop = function (config) {
-        if (!(this instanceof Sistcoop)) {
-            return new Sistcoop(config);
+    var Certamb = function (config) {
+        if (!(this instanceof Certamb)) {
+            return new Certamb(config);
         }
 
         var sc = this;
@@ -61,8 +61,8 @@
             return adapter.login(options);
         };
 
-        sc.loadAgencia = function() {
-            var url = getServerUrl() + '/session/account/agencia';
+        sc.loadTrabajador = function() {
+            var url = getServerUrl() + '/session/account/trabajador';
             var req = new XMLHttpRequest();
             req.open('GET', url, true);
             req.setRequestHeader('Accept', 'application/json');
@@ -73,13 +73,13 @@
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
-                        sc.agencia = JSON.parse(req.responseText);
-                        sc.agenciaLoaded = true;
-                        promise.setSuccess(sc.agencia);
+                        sc.trabajador = JSON.parse(req.responseText);
+                        sc.trabajadorLoaded = true;
+                        promise.setSuccess(sc.trabajador);
                     } else if (req.status == 204) {
-                        sc.agencia = undefined;
-                        promise.setSuccess(sc.agencia);
-                        sc.agenciaLoaded = true;
+                        sc.trabajador = undefined;
+                        sc.trabajadorLoaded = true;
+                        promise.setSuccess(sc.trabajador);
                     } else {
                         promise.setError();
                     }
@@ -91,8 +91,8 @@
             return promise.promise;
         };
 
-        sc.loadCaja = function() {
-            var url = getServerUrl() + '/session/account/caja';
+        sc.loadDireccionRegional = function() {
+            var url = getServerUrl() + '/session/account/direccionRegional';
             var req = new XMLHttpRequest();
             req.open('GET', url, true);
             req.setRequestHeader('Accept', 'application/json');
@@ -103,43 +103,13 @@
             req.onreadystatechange = function () {
                 if (req.readyState == 4) {
                     if (req.status == 200) {
-                        sc.caja = JSON.parse(req.responseText);
-                        sc.cajaLoaded = true;
-                        promise.setSuccess(sc.caja);
+                        sc.direccionRegional = JSON.parse(req.responseText);
+                        sc.direccionRegionalLoaded = true;
+                        promise.setSuccess(sc.direccionRegional);
                     } else if (req.status == 204) {
-                        sc.caja = undefined;
-                        sc.cajaLoaded = true;
-                        promise.setSuccess(sc.caja);
-                    } else {
-                        promise.setError();
-                    }
-                }
-            };
-
-            req.send();
-
-            return promise.promise;
-        };
-
-        sc.loadPersona = function() {
-            var url = getServerUrl() + '/session/account/persona';
-            var req = new XMLHttpRequest();
-            req.open('GET', url, true);
-            req.setRequestHeader('Accept', 'application/json');
-            req.setRequestHeader('Authorization', 'bearer ' + sc.authenticatedToken);
-
-            var promise = createPromise();
-
-            req.onreadystatechange = function () {
-                if (req.readyState == 4) {
-                    if (req.status == 200) {
-                        sc.persona = JSON.parse(req.responseText);
-                        sc.personaLoaded = true;
-                        promise.setSuccess(sc.persona);
-                    } else if (req.status == 204) {
-                        sc.persona = undefined;
-                        sc.personaLoaded = true;
-                        promise.setSuccess(sc.persona);
+                        sc.direccionRegional = undefined;
+                        sc.direccionRegionalLoaded = true;
+                        promise.setSuccess(sc.direccionRegional);
                     } else {
                         promise.setError();
                     }
@@ -164,7 +134,7 @@
             var configUrl;
 
             if (!config) {
-                configUrl = 'sistcoop.json';
+                configUrl = 'certamb.json';
             } else if (typeof config === 'string') {
                 configUrl = config;
             }
@@ -194,8 +164,8 @@
                 if (!config['url']) {
                     var scripts = document.getElementsByTagName('script');
                     for (var i = 0; i < scripts.length; i++) {
-                        if (scripts[i].src.match(/.*sistcoop\.js/)) {
-                            config.url = scripts[i].src.substr(0, scripts[i].src.indexOf('/js/sistcoop.js'));
+                        if (scripts[i].src.match(/.*certamb\.js/)) {
+                            config.url = scripts[i].src.substr(0, scripts[i].src.indexOf('/js/certamb.js'));
                             break;
                         }
                     }
@@ -260,18 +230,9 @@
                     login: function (options) {
                         var promise = createPromise();
 
-                        //load Agencia
-                        sc.loadAgencia().success(function () {
-                            if(sc.agenciaLoaded && sc.cajaLoaded && sc.personaLoaded) {
-                                promise.setSuccess();
-                            }
-                        }).error(function () {
-                            promise.setError();
-                        });
-
-                        //load caja
-                        sc.loadCaja().success(function () {
-                            if(sc.agenciaLoaded && sc.cajaLoaded && sc.personaLoaded) {
+                        //load Direccion regional
+                        sc.loadDireccionRegional().success(function () {
+                            if(sc.trabajadorLoaded && sc.direccionRegionalLoaded) {
                                 promise.setSuccess();
                             }
                         }).error(function () {
@@ -279,8 +240,8 @@
                         });
 
                         //load Trabajador
-                        sc.loadPersona().success(function () {
-                            if(sc.agenciaLoaded && sc.cajaLoaded && sc.personaLoaded) {
+                        sc.loadTrabajador().success(function () {
+                            if(sc.trabajadorLoaded && sc.direccionRegionalLoaded) {
                                 promise.setSuccess();
                             }
                         }).error(function () {
@@ -297,13 +258,13 @@
     };
 
     if (typeof module === "object" && module && typeof module.exports === "object") {
-        module.exports = Sistcoop;
+        module.exports = Certamb;
     } else {
-        window.Sistcoop = Sistcoop;
+        window.Sistcoop = Certamb;
 
         if (typeof define === "function" && define.amd) {
-            define("sistcoop", [], function () {
-                return Sistcoop;
+            define("certamb", [], function () {
+                return Certamb;
             });
         }
     }
