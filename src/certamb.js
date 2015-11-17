@@ -260,7 +260,7 @@
     if (typeof module === "object" && module && typeof module.exports === "object") {
         module.exports = Certamb;
     } else {
-        window.Sistcoop = Certamb;
+        window.Certamb = Certamb;
 
         if (typeof define === "function" && define.amd) {
             define("certamb", [], function () {
