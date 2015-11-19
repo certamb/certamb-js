@@ -1,13 +1,13 @@
 {
-  "name": "sistcoop",
+  "name": "certamb",
   "version": "1.2.0.Final",
-  "main": "dist/sistcoop.js",
+  "main": "dist/certamb.js",
   "ignore": [
     "**/.*"
   ],
-  "description": "Sistcoop adapter",
+  "description": "Certamb adapter",
   "keywords": [
-    "sistcoop",
+    "certamb",
     "sso",
     "oauth",
     "oauth2",
